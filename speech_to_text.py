@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 OPENAI_KEY = os.getenv("OPENAI_KEY")
-openai.api_key = "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"
+openai.api_key = OPENAI_KEY
 engine = pyttsx3.init()
 # Recognizer
 r = sr.Recognizer()
@@ -27,8 +27,8 @@ def record_text():
                 r.adjust_for_ambient_noise(source2, duration=0.2)
                 print("I'm listening")
                 audio2 = r.listen(source2)
-                my_text = r.recognize_google(audio2,)
-                # For Swedish: language='sv-SE'
+                my_text = r.recognize_google(audio2, language='sv-SE')
+                
                 return my_text
 
 
