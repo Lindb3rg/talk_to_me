@@ -1,16 +1,32 @@
 import speech_recognition as sr
 import pyttsx3
+import os
+import openai
+
+from dotenv import load_dotenv
+load_dotenv()
+
+OPENAI_KEY = os.getenv("OPENAI_KEY")
+openai.api_key = OPENAI_KEY
 
 # Recognizer
 r = sr.Recognizer()
+
+# Speak back
+def SpeakText(command):
+    engine = pyttsx3.init()
+    engine.say(command)
+    engine.runAndWait()
 
 def record_text():
     while(1):
         try:
             with sr.Microphone() as source2:
                 r.adjust_for_ambient_noise(source2, duration=0.2)
+                print("I'm listening")
                 audio2 = r.listen(source2)
-                my_text = r.recognize_google(audio2,language='sv-SE')
+                my_text = r.recognize_google(audio2,)
+                # For Swedish: language='sv-SE'
                 return my_text
 
 
@@ -22,6 +38,35 @@ def record_text():
 
     return
 
+
+
+
+def send_to_chatGBT(messages, model="gbt-3.5-turbo"):
+
+    response = openai.ChatCompletion.create(
+        model = model,
+        messages = messages,
+        max_token=100,
+        n=1,
+        stop=None,
+        temperature=0.5
+    )
+    message = response.choices[0].message.content
+    messages.append(response.choices[0].message)
+    return message
+
+messages = []
+
+while(1):
+    text = record_text()
+    messages.append({"role":"user","content":text})
+    response = send_to_chatGBT(messages)
+    SpeakText(response)
+
+    print(response)
+
+
+
 def output_text(text):
     f = open("output.txt", "a")
     f.write(text)
@@ -29,8 +74,5 @@ def output_text(text):
     f.close()
     return
 
-while(1):
-    text = record_text()
-    output_text(text)
 
-    print(text)
+
