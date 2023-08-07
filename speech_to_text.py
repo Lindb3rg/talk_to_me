@@ -27,7 +27,10 @@ def record_text():
                 r.adjust_for_ambient_noise(source2, duration=0.2)
                 print("I'm listening")
                 audio2 = r.listen(source2)
-                my_text = r.recognize_google(audio2, language='sv-SE')
+                my_text = r.recognize_google(audio2,language='sv-SE')
+
+                
+                
                 
                 return my_text
 
@@ -39,9 +42,6 @@ def record_text():
             print("Unknown error occured")
 
     return
-
-
-
 
 
 def send_to_chatGBT(messages, model="gpt-3.5-turbo"):
@@ -58,7 +58,7 @@ def send_to_chatGBT(messages, model="gpt-3.5-turbo"):
     messages.append(response.choices[0].message)
     return message
 
-messages = [{"role":"user","content":"Please act like Jarvis from Iron man."}]
+messages = []
 
 while(1):
     text = record_text()
