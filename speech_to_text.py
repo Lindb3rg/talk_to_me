@@ -41,6 +41,7 @@ def record_text():
 
 
 
+
 def send_to_chatGBT(messages, model="gbt-3.5-turbo"):
 
     response = openai.ChatCompletion.create(
@@ -55,7 +56,7 @@ def send_to_chatGBT(messages, model="gbt-3.5-turbo"):
     messages.append(response.choices[0].message)
     return message
 
-messages = []
+messages = [{"role":"user","content":"Please act like Jarvis from Iron man."}]
 
 while(1):
     text = record_text()
