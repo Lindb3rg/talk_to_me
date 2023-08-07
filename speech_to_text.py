@@ -7,16 +7,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 OPENAI_KEY = os.getenv("OPENAI_KEY")
-openai.api_key = OPENAI_KEY
-
+openai.api_key = "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"
+engine = pyttsx3.init()
 # Recognizer
 r = sr.Recognizer()
 
 # Speak back
-def SpeakText(command):
-    engine = pyttsx3.init()
-    engine.say(command)
-    engine.runAndWait()
+def SpeakText(command, engine):
+    try:
+        engine.say(command)
+        engine.runAndWait()
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 def record_text():
     while(1):
@@ -42,12 +44,12 @@ def record_text():
 
 
 
-def send_to_chatGBT(messages, model="gbt-3.5-turbo"):
+def send_to_chatGBT(messages, model="gpt-3.5-turbo"):
 
     response = openai.ChatCompletion.create(
         model = model,
         messages = messages,
-        max_token=100,
+        max_tokens=100,
         n=1,
         stop=None,
         temperature=0.5
@@ -63,7 +65,6 @@ while(1):
     messages.append({"role":"user","content":text})
     response = send_to_chatGBT(messages)
     SpeakText(response)
-
     print(response)
 
 
